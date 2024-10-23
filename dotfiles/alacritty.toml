@@ -1,0 +1,28 @@
+import = [
+  #"~/.config/alacritty/catppuccin-macchiato.toml"
+]
+
+[shell]
+program = "/bin/zsh"
+args = ["-l", "-c", "tmux attach || tmux"]
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+normal.family = "Hack Nerd Font"
+normal.style = "Regular"
+
+italic.family = "Hack Nerd Font"
+italic.style = "Italic"
+
+bold.family = "Hack Nerd Font"
+bold.style = "Bold"
+
+bold_italic.family = "Hack Nerd Font"
+bold_italic.style = "Bold Italic"
+
+[window]
+opacity = 0.75
+decorations = "ButtonLess"
+startup_mode = "SimpleFullscreen"
