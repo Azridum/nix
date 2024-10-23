@@ -20,81 +20,35 @@
       "aarch64-darwin"
       "x86_64-linux"
     ];
-    darwinConfiguration = {pkgs, ...}: {
-      # List packages installed in system profile. To search by name, run:
-      # $ nix-env -qaP | grep wget
-      nixpkgs.config.allowUnfree = true;
-      environment.systemPackages = with pkgs; [
-        alejandra
-        tmux
-        git
-        unzip
-        zip
-        neovim
-        wget
-        alacritty
-        jq
-        xq
-        btop
-        docker
-        curl
-        google-chrome
-        tmux
-        docker
-        python3
-        fzf
-        watch
-        ripgrep
-        cmake
-      ];
-
-      # Auto upgrade nix package and the daemon service.
-      services.nix-daemon.enable = true;
-      # nix.package = pkgs.nix;
-
-      # Necessary for using flakes on this system.
-      nix.settings.experimental-features = "nix-command flakes";
-
-      # Create /etc/zshrc that loads the nix-darwin environment.
-      programs.zsh = {
-        enable = true;
-      };
-
-      # Set Git commit hash for darwin-version.
-      system.configurationRevision = self.rev or self.dirtyRev or null;
-
-      # $ darwin-rebuild changelog
-      system.stateVersion = 5;
-      users.users.attilabanga.home = "/Users/attilabanga";
-
-      # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "aarch64-darwin";
-
-      security.pam.enableSudoTouchIdAuth = true;
-      environment = {
-        etc."pam.d/sudo_local".text = ''
-          # Managed by Nix Darwin
-          auth       optional       ${pkgs.pam-reattach}/lib/pam/pam_reattach.so ignore_ssh
-          auth       sufficient     pam_tid.so
-        '';
-      };
-    };
   in {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#simple
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     darwinConfigurations."MacBook-Pro-Attila" = nix-darwin.lib.darwinSystem {
       modules = [
-        darwinConfiguration
+        ./hosts/darwin/darwin.nix
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.attilabanga = import ./home.nix;
+          home-manager.users.attilabanga = import ./common/home.nix;
           home-manager.backupFileExtension = "backup";
         }
       ];
       #system = "aarch64-darwin";
+    };
+    nixosConfigurations.azridum = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./hosts/nixos/nixos/configuration.nix
+        home-manager.darwinModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.azridum = import ./common/home.nix;
+          home-manager.backupFileExtension = "backup";
+        }
+      ];
     };
 
     # Expose the package set, including overlays, for convenience.
