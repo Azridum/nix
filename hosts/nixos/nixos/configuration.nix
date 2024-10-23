@@ -54,6 +54,7 @@
     description = "azridum";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
+    home = "/home/azridum";
   };
 
   # Allow unfree packages
@@ -80,8 +81,10 @@
 	rustc
 	cargo
 	go
-	zsh
 	starship
+	atuin
+	fzf
+	lombok
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

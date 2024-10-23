@@ -15,7 +15,7 @@
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
-  #users.users.attilabanga.home = "/Users/attilabanga";
+  #users.users.attilabanga.home = "/home/azridum";
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -50,6 +50,7 @@
     lombok
     nodejs
     intelephense
+    kitty
   ];
 
   programs.zsh = {
