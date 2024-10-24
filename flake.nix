@@ -24,7 +24,7 @@
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#simple
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
-    darwinConfigurations."MacBook-Pro-Attila" = nix-darwin.lib.darwinSystem {
+    darwinConfigurations."mac" = nix-darwin.lib.darwinSystem {
       modules = [
         ./hosts/darwin/darwin.nix
         home-manager.darwinModules.home-manager
@@ -35,7 +35,10 @@
           home-manager.backupFileExtension = "backup";
         }
       ];
-      #system = "aarch64-darwin";
+      specialArgs = {
+        self = self;
+      };
+      system = "aarch64-darwin";
     };
     nixosConfigurations.azridum = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -52,6 +55,6 @@
     };
 
     # Expose the package set, including overlays, for convenience.
-    darwinPackages = self.darwinConfigurations."MacBook-Pro-Attila".pkgs;
+    darwinPackages = self.darwinConfigurations."mac".pkgs;
   };
 }
